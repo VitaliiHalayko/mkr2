@@ -1,5 +1,7 @@
 from django.test import TestCase
 from recipe.models import Recipe, Category
+from django.urls import reverse
+from django.utils import timezone
 
 
 class CategoryModelTest(TestCase):
@@ -41,3 +43,32 @@ class RecipeModelTest(TestCase):
         self.assertEqual(self.recipe.ingredients, "Flour, sugar, cocoa, eggs, milk, butter.")
         self.assertEqual(self.recipe.category, self.category)
         self.assertEqual(str(self.recipe), "Chocolate Cake")
+
+
+class MainViewTestCase(TestCase):
+    def test_main_view(self):
+        """
+        Test the main page loading
+        """
+        self.category = Category.objects.create(name="Test Category")
+
+        for i in range(5):
+            Recipe.objects.create(
+                title=f"Recipe {i}",
+                description=f"Description {i}",
+                instructions=f"Instructions {i}",
+                ingredients=f"Ingredients {i}",
+                created_at=timezone.now(),
+                updated_at=timezone.now(),
+                category=self.category
+            )
+
+        response = self.client.get(reverse('main'))
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertQuerysetEqual(
+            response.context['recipes'],
+            Recipe.objects.all(),
+            ordered=False
+        )
