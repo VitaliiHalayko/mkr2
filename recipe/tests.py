@@ -58,8 +58,6 @@ class MainViewTestCase(TestCase):
                 description=f"Description {i}",
                 instructions=f"Instructions {i}",
                 ingredients=f"Ingredients {i}",
-                created_at=timezone.now(),
-                updated_at=timezone.now(),
                 category=self.category
             )
 
@@ -70,5 +68,35 @@ class MainViewTestCase(TestCase):
         self.assertQuerysetEqual(
             response.context['recipes'],
             Recipe.objects.all(),
+            ordered=False
+        )
+
+
+class CategoryDetailViewTestCase(TestCase):
+    def setUp(self):
+        self.category = Category.objects.create(name="Test Category")
+
+        for i in range(5):
+            Recipe.objects.create(
+                title=f"Recipe {i}",
+                description=f"Description {i}",
+                instructions=f"Instructions {i}",
+                ingredients=f"Ingredients {i}",
+                category=self.category
+            )
+
+    def test_category_detail_view(self):
+        """
+        Test the category detail page loading
+        """
+        response = self.client.get(reverse('category_detail', args=(self.category.id, )))
+
+        recipes_in_category = self.category.categories.all()
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertQuerysetEqual(
+            response.context['category'],
+            recipes_in_category,
             ordered=False
         )
