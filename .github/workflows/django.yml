@@ -32,18 +32,10 @@ jobs:
     - name: Upload pytest HTML report as artifact
       uses: actions/upload-artifact@v2
       with:
-<<<<<<< HEAD
-        name: pytest-report
-=======
         name: pytest-html-report
->>>>>>> develop
         path: pytest_report.html
     - name: Upload flake8 HTML report as artifact
       uses: actions/upload-artifact@v2
       with:
-<<<<<<< HEAD
-        name: flake8-report
-=======
         name: flake8-html-report
->>>>>>> develop
         path: flake8-report
