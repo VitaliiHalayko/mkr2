@@ -46,10 +46,7 @@ class RecipeModelTest(TestCase):
 
 
 class MainViewTestCase(TestCase):
-    def test_main_view(self):
-        """
-        Test the main page loading
-        """
+    def setUp(self):
         self.category = Category.objects.create(name="Test Category")
 
         for i in range(5):
@@ -61,6 +58,10 @@ class MainViewTestCase(TestCase):
                 category=self.category
             )
 
+    def test_main_view(self):
+        """
+        Test the main page loading
+        """
         response = self.client.get(reverse('main'))
 
         self.assertEqual(response.status_code, 200)
