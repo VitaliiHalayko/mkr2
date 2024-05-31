@@ -8,3 +8,10 @@ def main(request):
         'recipes': recipes
     })
 
+
+def category_detail(request, category_id):
+    category = Category.objects.get(id=category_id)
+    recipes = Recipe.objects.filter(category=category)
+    return render(request, 'category_detail.html', {
+        'category': recipes
+    })
