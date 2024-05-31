@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Category, Recipe
+from django.http import Http404
 
 
 def main(request):
@@ -17,8 +18,11 @@ def category_detail(request, category_id):
     """
     Renders the category detail page with all recipes associated with that category by some category id
     """
-    category = Category.objects.get(id=category_id)
-    recipes_in_category = category.categories.all()
+    try:
+        category = Category.objects.get(id=category_id)
+        recipes_in_category = category.categories.all()
+    except Category.DoesNotExist:
+        raise Http404("Категорія не знайдена")
 
     return render(request, 'category_detail.html', {
         'category': recipes_in_category
